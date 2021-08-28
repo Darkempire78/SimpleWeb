@@ -1,0 +1,4 @@
+rich
+markdownify
+beautifulsoup4
+requests_html

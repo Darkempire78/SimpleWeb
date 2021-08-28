@@ -1,0 +1,13 @@
+{
+    "resultPreviewLimit": 8,
+    "resultLimit": 20,
+
+    "spaceBetweenResults": true,
+    
+    "removeYoutubeResults": true,
+    "removeGoogleTranslatorResults": true,
+
+    "blackListDomains": [],
+
+    "blackListTags": ["script", "head", "footer", "header", "style"]
+}

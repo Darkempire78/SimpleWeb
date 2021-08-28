@@ -30,14 +30,13 @@ class SimpleWeb:
         self.blackListDomains = config["blackListDomains"]
         self.blackListTags = config["blackListTags"]
 
-        self.query = None
         self.current = {
             "type": None,
-            "data": None
+            "data": {}
         }
         self.back = {
             "type": None,
-            "data": None
+            "data": {}
         }
 
     def getSource(self, url):
@@ -61,13 +60,13 @@ class SimpleWeb:
             newBack = self.current.copy()
             self.current = self.back.copy()
             self.back = newBack
-            query = self.query
-            links = [i["link"] for i in self.current["data"]]
+            query = self.current["data"]["query"]
+            links = [i["link"] for i in self.current["data"]["results"]]
         else:
             self.back = self.current.copy()
             self.current["type"] = "searchResult"
-            self.query = query
-            self.current["data"] = []
+            self.current["data"]["query"] = query
+            self.current["data"]["results"] = []
 
         tree = Tree(f"[bold blue]{query}[/bold blue]")
 
@@ -107,8 +106,8 @@ class SimpleWeb:
             if n - 1 >= self.resultLimit:
                 break
             if back:
-                title = self.current["data"][n - 1]["title"]
-                description = self.current["data"][n - 1]["description"]
+                title = self.current["data"]["results"][n - 1]["title"]
+                description = self.current["data"]["results"][n - 1]["description"]
             else:
                 if n <= self.resultPreviewLimit:
                     clear()
@@ -133,7 +132,7 @@ class SimpleWeb:
                             description = None
                     except:
                         pass
-            self.current["data"].append(
+            self.current["data"]["results"].append(
                 {
                     "link": link,
                     "title": title,
@@ -176,7 +175,7 @@ class SimpleWeb:
         self.console.print(Panel(f"[bold blue]{title}[/bold blue]\n[i yellow]{link}[/i yellow]"), Panel(websiteMD))
 
         self.current["type"] = "webPage"
-        self.current["data"] = {
+        self.current["data"]["results"] = {
             "websiteMD": websiteMD,
             "title": title,
             "link": link
@@ -225,7 +224,7 @@ class SimpleWeb:
                     self.scrapeGoogle(back=True)
             else:
                 if self.current["type"] == "searchResult" and choice.isdigit():
-                    link = self.current["data"][int(choice) - 1]["link"]
+                    link = self.current["data"]["results"][int(choice) - 1]["link"]
                     self.displayWebPage(link=link)
                 else:
                     self.console.print("[i red]Invalid query[/i red]")

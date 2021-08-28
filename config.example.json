@@ -9,5 +9,5 @@
 
     "blackListDomains": [],
 
-    "blackListTags": ["script", "head", "footer", "header", "style"]
+    "blackListTags": ["script", "head", "footer", "header", "style", "button", "iframe", "img", "picture", "video", "svg"]
 }

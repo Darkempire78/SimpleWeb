@@ -3,11 +3,12 @@
     "resultLimit": 20,
 
     "spaceBetweenResults": true,
+
+    "clear": false,
     
     "removeYoutubeResults": true,
     "removeGoogleTranslatorResults": true,
 
     "blackListDomains": [],
-
     "blackListTags": ["script", "head", "footer", "header", "style", "button", "iframe", "img", "picture", "video", "svg"]
 }

@@ -30,10 +30,8 @@ class SimpleWeb:
         self.blackListDomains = config["blackListDomains"]
         self.blackListTags = config["blackListTags"]
 
-        self.current = {
-            "type": None,
-            "data": {}
-        }
+        self.tabs = []
+        self.currentTab = 0
         self.back = {
             "type": None,
             "data": {}
@@ -56,17 +54,17 @@ class SimpleWeb:
             print(e)
 
     def scrapeGoogle(self, back=False, query=None):
-        if back:
-            newBack = self.current.copy()
-            self.current = self.back.copy()
-            self.back = newBack
-            query = self.current["data"]["query"]
-            links = [i["link"] for i in self.current["data"]["results"]]
-        else:
-            self.back = self.current.copy()
-            self.current["type"] = "searchResult"
-            self.current["data"]["query"] = query
-            self.current["data"]["results"] = []
+        # if back:
+        #     newBack = self.current.copy()
+        #     self.current = self.back.copy()
+        #     self.back = newBack
+        #     query = self.current["data"]["query"]
+        #     links = [i["link"] for i in self.current["data"]["results"]]
+        # else:
+            # self.back = self.current.copy()
+        self.tabs[self.currentTab]["current"]["type"] = "searchResult"
+        self.tabs[self.currentTab]["current"]["data"]["query"] = query
+        self.tabs[self.currentTab]["current"]["data"]["results"] = []
 
         tree = Tree(f"[bold blue]{query}[/bold blue]")
 
@@ -105,34 +103,34 @@ class SimpleWeb:
             n += 1
             if n - 1 >= self.resultLimit:
                 break
-            if back:
-                title = self.current["data"]["results"][n - 1]["title"]
-                description = self.current["data"]["results"][n - 1]["description"]
-            else:
-                if n <= self.resultPreviewLimit:
-                    clear()
-                    print(tree)
-                title = None 
-                description = None 
-                if n <= self.resultPreviewLimit:
-                    try:
-                        r = requests.get(link)
-                        soup = BeautifulSoup(r.content, 'html.parser')
-                        # title = soup.select("meta[name='twitter:title']")[0].attrs["content"]
-                        title = soup.select("meta[property='og:title']")
-                        if len(title) > 0:
-                            title = title[0].attrs["content"]
-                        else:
-                            title = None
-                        # description = soup.select("meta[name='twitter:description']")[0].attrs["content"]
-                        description = soup.select("meta[property='og:description']")
-                        if len(description) > 0:
-                            description = description[0].attrs["content"]
-                        else:
-                            description = None
-                    except:
-                        pass
-            self.current["data"]["results"].append(
+            # if back:
+            #     title = self.tabs[self.currentTab]["current"]["data"]["results"][n - 1]["title"]
+            #     description = self.tabs[self.currentTab]["current"]["data"]["results"][n - 1]["description"]
+            # else:
+            if n <= self.resultPreviewLimit:
+                clear()
+                print(tree)
+            title = None 
+            description = None 
+            if n <= self.resultPreviewLimit:
+                try:
+                    r = requests.get(link)
+                    soup = BeautifulSoup(r.content, 'html.parser')
+                    # title = soup.select("meta[name='twitter:title']")[0].attrs["content"]
+                    title = soup.select("meta[property='og:title']")
+                    if len(title) > 0:
+                        title = title[0].attrs["content"]
+                    else:
+                        title = None
+                    # description = soup.select("meta[name='twitter:description']")[0].attrs["content"]
+                    description = soup.select("meta[property='og:description']")
+                    if len(description) > 0:
+                        description = description[0].attrs["content"]
+                    else:
+                        description = None
+                except:
+                    pass
+            self.tabs[self.currentTab]["current"]["data"]["results"].append(
                 {
                     "link": link,
                     "title": title,
@@ -161,21 +159,21 @@ class SimpleWeb:
         return (title, markdown)
 
     def displayWebPage(self, back=False, link=None):
-        if back:
-            websiteMD = self.back["data"]["websiteMD"]
-            link = self.back["data"]["link"]
-            title = self.back["data"]["title"]
-        else:
-            title, websiteMD = self.htmlToMarkdown(link)
+        # if back:
+        #     websiteMD = self.back["data"]["websiteMD"]
+        #     link = self.back["data"]["link"]
+        #     title = self.back["data"]["title"]
+        # else:
+        title, websiteMD = self.htmlToMarkdown(link)
         
         clear()
 
-        self.back = self.current.copy()
+        # self.back = self.current.copy()
 
         self.console.print(Panel(f"[bold blue]{title}[/bold blue]\n[i yellow]{link}[/i yellow]"), Panel(websiteMD))
 
-        self.current["type"] = "webPage"
-        self.current["data"]["results"] = {
+        self.tabs[self.currentTab]["current"]["type"] = "webPage"
+        self.tabs[self.currentTab]["current"]["data"]["results"] = {
             "websiteMD": websiteMD,
             "title": title,
             "link": link
@@ -197,34 +195,107 @@ class SimpleWeb:
 
         self.inputHandler()
 
+    def displayTabs(self):
+        clear()
+
+        n = 0
+        for tab in self.tabs:
+            n += 1
+            data = ""
+            # Tab number
+            data += f"[bold blue][{n}][/bold blue] "
+            if n - 1 == self.currentTab:
+                data += "[bold blue](CURRENT)[/bold blue] "
+            # Tab title
+            if tab["current"]["type"] == "webPage":
+                data += f"[bold]{tab['current']['data']['results']['title']}[/bold]"
+            elif tab["current"]["type"] == "searchResult":
+                data += f"[bold]Search: {tab['current']['data']['query']}[/bold]"
+            else:
+                data += f"[bold]Empty Page[/bold]"
+            # Tab link
+            if tab["current"]["type"] == "webPage":
+                data += f"\n[i red]{tab['current']['data']['results']['link']}[/i red]"
+            elif tab["current"]["type"] == "searchResult":
+                pass
+            else:
+                pass
+            self.console.print(Panel(data))
+
+        self.inputHandler()
+
+    def newTab(self, query=None):
+        clear()
+        # Create a new tab
+        self.tabs.append(
+            {
+                "history": [],
+                "current": {
+                    "type": None,
+                    "data": {}
+                }
+            }
+        )
+        self.currentTab = len(self.tabs) -1
+
+        # Search the query
+        self.scrapeGoogle(query=query)
+
+        self.inputHandler()
+
+    def changeCurrentTab(self, tab=None):
+        clear()
+
+        if not tab.isdigit():
+            self.console.print("[i red]Invalid tab, it must be a number[/i red]")
+        elif int(tab) <= 0 or int(tab)>= len(self.tabs):
+            self.console.print(f"[i red]Invalid tab, the number selected is higher than {len(self.tabs) -1} or less than 1[/i red]")
+        else:
+            self.currentTab = int(tab) - 1
+
+        self.inputHandler()
+
     def inputHandler(self):
         try:
-            choice = Prompt.ask("[bold blue]Action[/bold blue]")
-            prefix = choice.split(" ")[0]
-            if prefix == ":s":
-                if len(choice.split(" ")) <= 1:
+            query = Prompt.ask("[bold blue]Search[/bold blue]").strip()
+            prefix = query.split(" ")[0]
+            if prefix == ":s"  or prefix == ":search":
+                if len(query.split(" ")) <= 1:
                     self.console.print("[i red]Empty query[/i red]")
                     self.inputHandler()
-                self.scrapeGoogle(query=choice[2:])
+                self.scrapeGoogle(query=query.replace(prefix, "", 1))
+            if prefix == ":ws" or prefix == ":website":
+                if len(query.split(" ")) <= 1:
+                    self.console.print("[i red]Empty query[/i red]")
+                    self.inputHandler()
+                self.displayWebPage(link=query.replace(prefix, "", 1))
             # Clear
-            elif prefix == ":c":
+            elif prefix == ":c" or prefix == ":clear":
                 clear()
                 self.inputHandler()
             # Settings
             elif prefix == ":config":
                 self.displaySettings()
+            # Tabs
+            elif prefix == ":t" or prefix == ":tab" or prefix == ":tabs":
+                if query == prefix:
+                    self.displayTabs()
+                elif query.split(" ")[1] == "-s" or query.split(" ")[1] == "-select":
+                    self.changeCurrentTab(query.split(" ")[2])
+                else:
+                    self.newTab(query=query.replace(prefix, "", 1))
             # Back
-            elif prefix == ":b":
-                if self.back["type"] is None:
-                    self.console.print("[i red]There is nothing back[/i red]")
-                    self.inputHandler()
-                if self.back["type"] == "webPage":
-                    self.displayWebPage(back=True)
-                elif self.back["type"] == "searchResult":
-                    self.scrapeGoogle(back=True)
+            # elif prefix == ":b":
+            #     if self.back["type"] is None:
+            #         self.console.print("[i red]There is nothing back[/i red]")
+            #         self.inputHandler()
+            #     if self.back["type"] == "webPage":
+            #         self.displayWebPage(back=True)
+            #     elif self.back["type"] == "searchResult":
+            #         self.scrapeGoogle(back=True)
             else:
-                if self.current["type"] == "searchResult" and choice.isdigit():
-                    link = self.current["data"]["results"][int(choice) - 1]["link"]
+                if self.tabs[self.currentTab]["current"]["type"] == "searchResult" and query.isdigit():
+                    link = self.tabs[self.currentTab]["current"]["data"]["results"][int(query) - 1]["link"]
                     self.displayWebPage(link=link)
                 else:
                     self.console.print("[i red]Invalid query[/i red]")
@@ -233,7 +304,23 @@ class SimpleWeb:
             print(ex)
             self.inputHandler()
 
+    def main(self):
+        # Check if a tab is opened
+        if not self.tabs:
+            self.currentTab = 0
+            self.tabs.append(
+                {
+                    "history": [],
+                    "current": {
+                        "type": None,
+                        "data": {}
+                    }
+                }
+            )
+        
+        self.inputHandler()
+
 
 if __name__ == '__main__':
     SW = SimpleWeb()
-    SW.inputHandler()
+    SW.main()

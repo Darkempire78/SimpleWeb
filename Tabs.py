@@ -60,5 +60,3 @@ class Tabs:
             self.console.print(f"[i red]Invalid tab, the number selected is higher than {len(self.tabs) -1} or less than 1[/i red]")
         else:
             self.currentTab = int(tab) - 1
-
-        self.inputHandler()

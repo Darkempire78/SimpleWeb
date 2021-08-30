@@ -25,6 +25,19 @@ Browse the internet easily from the console.
 
 Finally, launch the script.
 
+## Commands
+
+| Commands                    | Action                                                                         |
+|-----------------------------|--------------------------------------------------------------------------------|
+| **:s** \<query>  <br> **:search** \<query> | Search the query on Google (write the number of the result to see the website) |
+| **:ws** <url> <br> **:website** <url>    | Display a website                                                              |
+| **:h** <br> **:history**                 | See the history                                                                |
+| **:t** <br> **:tab** <br> **:tabs**               | See the list of tabs                                                           |
+| **:t** -s \<tabNumber>           | Select a specific tab                                                          |
+| **:t** \<query>                  | Create a new tab and search the query on Google                                |
+| **:c** <br> **:clear**                   | Clear                                                                          |
+| **:config**                     | Display the settings                                                           |
+
 ## Features
 
 * History system

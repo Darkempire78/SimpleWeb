@@ -4,13 +4,11 @@
 
     "spaceBetweenResults": true,
 
-    "clear": false,
+    "clear": true,
     
     "removeYoutubeResults": true,
     "removeGoogleTranslatorResults": true,
 
     "blackListDomains": [],
-    "blackListTags": ["script", "head", "footer", "header", "style", "button", "iframe", "img", "picture", "video", "svg"],
-
-    "history": []
+    "blackListTags": ["script", "head", "footer", "header", "style", "button", "iframe", "img", "picture", "video", "svg", "span", "form", "nav", "menu", "input"]
 }

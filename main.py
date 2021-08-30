@@ -145,9 +145,6 @@ class SimpleWeb:
         clear()
         print(tree)
 
-        self.inputHandler()
-
-
     def htmlToMarkdown(self, url):
         r = requests.get(url)
         html = r.text
@@ -184,8 +181,6 @@ class SimpleWeb:
 
         self.History.add(title=title, link=link)
 
-        self.inputHandler()
-
     def displaySettings(self):
         clear()
 
@@ -200,8 +195,6 @@ class SimpleWeb:
             
         self.console.print(Panel(data))
 
-        self.inputHandler()
-
     def inputHandler(self):
         try:
             query = Prompt.ask("[bold blue]Search[/bold blue]").strip()
@@ -209,17 +202,14 @@ class SimpleWeb:
             if prefix == ":s"  or prefix == ":search":
                 if len(query.split(" ")) <= 1:
                     self.console.print("[i red]Empty query[/i red]")
-                    self.inputHandler()
                 self.scrapeGoogle(query=query.replace(prefix, "", 1))
             elif prefix == ":ws" or prefix == ":website":
                 if len(query.split(" ")) <= 1:
                     self.console.print("[i red]Empty query[/i red]")
-                    self.inputHandler()
                 self.displayWebPage(link=query.replace(prefix, "", 1))
             # Clear
             elif prefix == ":c" or prefix == ":clear":
                 clear(command=True)
-                self.inputHandler()
             # Settings
             elif prefix == ":config":
                 self.displaySettings()
@@ -227,23 +217,18 @@ class SimpleWeb:
             elif prefix == ":t" or prefix == ":tab" or prefix == ":tabs":
                 if query == prefix:
                     self.Tabs.display()
-                    self.inputHandler()
                 elif query.split(" ")[1] == "-s" or query.split(" ")[1] == "-select":
                     self.Tabs.changeCurrent(query.split(" ")[2])
-                    self.inputHandler()
                 else:
                     self.Tabs.new(query=query.replace(prefix, "", 1))
                     self.scrapeGoogle(query=query) # Search the query
-                    self.inputHandler()
             # History
             elif prefix == ":h" or prefix == ":history":
                 self.History.displayHistory()
-                self.inputHandler()
             # Back
             # elif prefix == ":b":
             #     if self.back["type"] is None:
             #         self.console.print("[i red]There is nothing back[/i red]")
-            #         self.inputHandler()
             #     if self.back["type"] == "webPage":
             #         self.displayWebPage(back=True)
             #     elif self.back["type"] == "searchResult":
@@ -254,7 +239,7 @@ class SimpleWeb:
                     self.displayWebPage(link=link)
                 else:
                     self.console.print("[i red]Invalid query! Use :s <query> to search on internet or :help to get the help panel[/i red]")
-                    self.inputHandler()
+            self.inputHandler()
         except Exception as ex:
             print(ex)
             self.inputHandler()

@@ -25,6 +25,13 @@ Browse the internet easily from the console.
 
 Finally, launch the script.
 
+## Features
+
+* History system
+* Tab system
+* Customizable
+* And more...
+
 ## Commands
 
 | Commands                    | Action                                                                         |
@@ -37,13 +44,6 @@ Finally, launch the script.
 | **:t** \<query>                  | Create a new tab and search the query on Google                                |
 | **:c** <br> **:clear**                   | Clear                                                                          |
 | **:config**                     | Display the settings                                                           |
-
-## Features
-
-* History system
-* Tab system
-* Customizable
-* And more...
 
 ## Preview
 

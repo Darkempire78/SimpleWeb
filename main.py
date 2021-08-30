@@ -11,8 +11,9 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 from markdownify import markdownify as md
-from History import History
 
+from History import History
+from Tabs import Tabs
 from utils import clear
 
 
@@ -31,9 +32,9 @@ class SimpleWeb:
         self.blackListDomains = config["blackListDomains"]
         self.blackListTags = config["blackListTags"]
 
-        self.history = History()
-        self.tabs = []
-        self.currentTab = 0
+        self.History = History()
+        self.Tabs = Tabs()
+
         self.back = {
             "type": None,
             "data": {}
@@ -64,9 +65,9 @@ class SimpleWeb:
         #     links = [i["link"] for i in self.current["data"]["results"]]
         # else:
             # self.back = self.current.copy()
-        self.tabs[self.currentTab]["current"]["type"] = "searchResult"
-        self.tabs[self.currentTab]["current"]["data"]["query"] = query
-        self.tabs[self.currentTab]["current"]["data"]["results"] = []
+        self.Tabs.tabs[self.Tabs.currentTab]["current"]["type"] = "searchResult"
+        self.Tabs.tabs[self.Tabs.currentTab]["current"]["data"]["query"] = query
+        self.Tabs.tabs[self.Tabs.currentTab]["current"]["data"]["results"] = []
 
         tree = Tree(f"[bold blue]{query}[/bold blue]")
 
@@ -106,8 +107,8 @@ class SimpleWeb:
             if n - 1 >= self.resultLimit:
                 break
             # if back:
-            #     title = self.tabs[self.currentTab]["current"]["data"]["results"][n - 1]["title"]
-            #     description = self.tabs[self.currentTab]["current"]["data"]["results"][n - 1]["description"]
+            #     title = self.Tabs[self.Tabs.currentTab]["current"]["data"]["results"][n - 1]["title"]
+            #     description = self.Tabs[self.Tabs.currentTab]["current"]["data"]["results"][n - 1]["description"]
             # else:
             if n <= self.resultPreviewLimit:
                 clear()
@@ -132,7 +133,7 @@ class SimpleWeb:
                         description = None
                 except:
                     pass
-            self.tabs[self.currentTab]["current"]["data"]["results"].append(
+            self.Tabs.tabs[self.Tabs.currentTab]["current"]["data"]["results"].append(
                 {
                     "link": link,
                     "title": title,
@@ -174,14 +175,14 @@ class SimpleWeb:
 
         self.console.print(Panel(f"[bold blue]{title}[/bold blue]\n[i yellow]{link}[/i yellow]"), Panel(websiteMD))
 
-        self.tabs[self.currentTab]["current"]["type"] = "webPage"
-        self.tabs[self.currentTab]["current"]["data"]["results"] = {
+        self.Tabs.tabs[self.Tabs.currentTab]["current"]["type"] = "webPage"
+        self.Tabs.tabs[self.Tabs.currentTab]["current"]["data"]["results"] = {
             "websiteMD": websiteMD,
             "title": title,
             "link": link
         }
 
-        self.history.add(title=title, link=link)
+        self.History.add(title=title, link=link)
 
         self.inputHandler()
 
@@ -198,68 +199,6 @@ class SimpleWeb:
             data += f"[bold blue]{key}[/bold blue]: [red]{value}[/red]\n"
             
         self.console.print(Panel(data))
-
-        self.inputHandler()
-
-    def displayTabs(self):
-        clear()
-
-        self.console.rule("[bold yellow]TABS")
-
-        n = 0
-        for tab in self.tabs:
-            n += 1
-            data = ""
-            # Tab number
-            data += f"[bold blue][{n}][/bold blue] "
-            if n - 1 == self.currentTab:
-                data += "[bold blue](CURRENT)[/bold blue] "
-            # Tab title
-            if tab["current"]["type"] == "webPage":
-                data += f"[bold]{tab['current']['data']['results']['title']}[/bold]"
-            elif tab["current"]["type"] == "searchResult":
-                data += f"[bold]Search: {tab['current']['data']['query']}[/bold]"
-            else:
-                data += f"[bold]Empty Page[/bold]"
-            # Tab link
-            if tab["current"]["type"] == "webPage":
-                data += f"\n[i red]{tab['current']['data']['results']['link']}[/i red]"
-            elif tab["current"]["type"] == "searchResult":
-                pass
-            else:
-                pass
-            self.console.print(Panel(data))
-
-        self.inputHandler()
-
-    def newTab(self, query=None):
-        clear()
-        # Create a new tab
-        self.tabs.append(
-            {
-                "history": [],
-                "current": {
-                    "type": None,
-                    "data": {}
-                }
-            }
-        )
-        self.currentTab = len(self.tabs) -1
-
-        # Search the query
-        self.scrapeGoogle(query=query)
-
-        self.inputHandler()
-
-    def changeCurrentTab(self, tab=None):
-        clear()
-
-        if not tab.isdigit():
-            self.console.print("[i red]Invalid tab, it must be a number[/i red]")
-        elif int(tab) <= 0 or int(tab)>= len(self.tabs):
-            self.console.print(f"[i red]Invalid tab, the number selected is higher than {len(self.tabs) -1} or less than 1[/i red]")
-        else:
-            self.currentTab = int(tab) - 1
 
         self.inputHandler()
 
@@ -287,14 +226,19 @@ class SimpleWeb:
             # Tabs
             elif prefix == ":t" or prefix == ":tab" or prefix == ":tabs":
                 if query == prefix:
-                    self.displayTabs()
+                    self.Tabs.display()
+                    self.inputHandler()
                 elif query.split(" ")[1] == "-s" or query.split(" ")[1] == "-select":
-                    self.changeCurrentTab(query.split(" ")[2])
+                    self.Tabs.changeCurrent(query.split(" ")[2])
+                    self.inputHandler()
                 else:
-                    self.newTab(query=query.replace(prefix, "", 1))
+                    self.Tabs.new(query=query.replace(prefix, "", 1))
+                    self.scrapeGoogle(query=query) # Search the query
+                    self.inputHandler()
             # History
             elif prefix == ":h" or prefix == ":history":
-                self.history.displayHistory()
+                self.History.displayHistory()
+                self.inputHandler()
             # Back
             # elif prefix == ":b":
             #     if self.back["type"] is None:
@@ -305,8 +249,8 @@ class SimpleWeb:
             #     elif self.back["type"] == "searchResult":
             #         self.scrapeGoogle(back=True)
             else:
-                if self.tabs[self.currentTab]["current"]["type"] == "searchResult" and query.isdigit():
-                    link = self.tabs[self.currentTab]["current"]["data"]["results"][int(query) - 1]["link"]
+                if self.Tabs.tabs[self.Tabs.currentTab]["current"]["type"] == "searchResult" and query.isdigit():
+                    link = self.Tabs.tabs[self.Tabs.currentTab]["current"]["data"]["results"][int(query) - 1]["link"]
                     self.displayWebPage(link=link)
                 else:
                     self.console.print("[i red]Invalid query! Use :s <query> to search on internet or :help to get the help panel[/i red]")
@@ -317,9 +261,9 @@ class SimpleWeb:
 
     def main(self):
         # Check if a tab is opened
-        if not self.tabs:
-            self.currentTab = 0
-            self.tabs.append(
+        if not self.Tabs.tabs:
+            self.Tabs.currentTab = 0
+            self.Tabs.tabs.append(
                 {
                     "history": [],
                     "current": {

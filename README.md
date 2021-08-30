@@ -34,6 +34,12 @@ Finally, launch the script.
 
 ## Preview
 
+### Search
+<img src="assets/capture1.png" width="700"/>
+
+### History
+<img src="assets/capture2.png" width="700"/>
+
 ## Discord
 
 Join the Discord server !

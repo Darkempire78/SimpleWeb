@@ -30,7 +30,7 @@ Finally, launch the script.
 | Commands                    | Action                                                                         |
 |-----------------------------|--------------------------------------------------------------------------------|
 | **:s** \<query>  <br> **:search** \<query> | Search the query on Google (write the number of the result to see the website) |
-| **:ws** <url> <br> **:website** <url>    | Display a website                                                              |
+| **:ws** \<url> <br> **:website** \<url>    | Display a website                                                              |
 | **:h** <br> **:history**                 | See the history                                                                |
 | **:t** <br> **:tab** <br> **:tabs**               | See the list of tabs                                                           |
 | **:t** -s \<tabNumber>           | Select a specific tab                                                          |

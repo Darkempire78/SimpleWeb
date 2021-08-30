@@ -50,6 +50,9 @@ Finally, launch the script.
 ### Search
 <img src="assets/capture1.png" width="700"/>
 
+### Website
+<img src="assets/capture3.png" width="700"/>
+
 ### History
 <img src="assets/capture2.png" width="700"/>
 

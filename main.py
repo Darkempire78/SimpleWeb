@@ -11,6 +11,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 from markdownify import markdownify as md
+from History import History
 
 from utils import clear
 
@@ -30,6 +31,7 @@ class SimpleWeb:
         self.blackListDomains = config["blackListDomains"]
         self.blackListTags = config["blackListTags"]
 
+        self.history = History()
         self.tabs = []
         self.currentTab = 0
         self.back = {
@@ -179,10 +181,14 @@ class SimpleWeb:
             "link": link
         }
 
+        self.history.add(title=title, link=link)
+
         self.inputHandler()
 
     def displaySettings(self):
         clear()
+
+        self.console.rule("[bold yellow]SETTINGS")
 
         with open("config.json", "r", encoding="utf-8") as configFile:
             config = json.load(configFile)
@@ -197,6 +203,8 @@ class SimpleWeb:
 
     def displayTabs(self):
         clear()
+
+        self.console.rule("[bold yellow]TABS")
 
         n = 0
         for tab in self.tabs:
@@ -264,14 +272,14 @@ class SimpleWeb:
                     self.console.print("[i red]Empty query[/i red]")
                     self.inputHandler()
                 self.scrapeGoogle(query=query.replace(prefix, "", 1))
-            if prefix == ":ws" or prefix == ":website":
+            elif prefix == ":ws" or prefix == ":website":
                 if len(query.split(" ")) <= 1:
                     self.console.print("[i red]Empty query[/i red]")
                     self.inputHandler()
                 self.displayWebPage(link=query.replace(prefix, "", 1))
             # Clear
             elif prefix == ":c" or prefix == ":clear":
-                clear()
+                clear(command=True)
                 self.inputHandler()
             # Settings
             elif prefix == ":config":
@@ -284,6 +292,9 @@ class SimpleWeb:
                     self.changeCurrentTab(query.split(" ")[2])
                 else:
                     self.newTab(query=query.replace(prefix, "", 1))
+            # History
+            elif prefix == ":h" or prefix == ":history":
+                self.history.displayHistory()
             # Back
             # elif prefix == ":b":
             #     if self.back["type"] is None:
@@ -298,7 +309,7 @@ class SimpleWeb:
                     link = self.tabs[self.currentTab]["current"]["data"]["results"][int(query) - 1]["link"]
                     self.displayWebPage(link=link)
                 else:
-                    self.console.print("[i red]Invalid query[/i red]")
+                    self.console.print("[i red]Invalid query! Use :s <query> to search on internet or :help to get the help panel[/i red]")
                     self.inputHandler()
         except Exception as ex:
             print(ex)

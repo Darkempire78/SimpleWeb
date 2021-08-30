@@ -1,5 +1,5 @@
 {
-    "resultPreviewLimit": 8,
+    "resultPreviewLimit": 5,
     "resultLimit": 20,
 
     "spaceBetweenResults": true,
@@ -10,5 +10,7 @@
     "removeGoogleTranslatorResults": true,
 
     "blackListDomains": [],
-    "blackListTags": ["script", "head", "footer", "header", "style", "button", "iframe", "img", "picture", "video", "svg"]
+    "blackListTags": ["script", "head", "footer", "header", "style", "button", "iframe", "img", "picture", "video", "svg"],
+
+    "history": []
 }

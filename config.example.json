@@ -2,6 +2,16 @@
     "resultPreviewLimit": 5,
     "resultLimit": 20,
 
+    "defaultBrowser": "google",
+    "browserPrefixes": {
+        "-g": "google",
+        "-d": "duckduckgo"
+    },
+    "browserSearch": {
+        "google": "https://www.google.com/search?q=",
+        "duckduckgo": "https://html.duckduckgo.com/html?q="
+    },
+
     "spaceBetweenResults": true,
 
     "clear": true,

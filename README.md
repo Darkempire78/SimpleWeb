@@ -13,6 +13,15 @@ Browse the internet easily from the console.
 {
     "resultPreviewLimit": 5, // 0 = Fast, 5 = Recommended, 10+= Slow
     "resultLimit": 20,
+    "defaultBrowser": "google", // available: google, duckduckgo
+    "browserPrefixes": {
+        "-g": "google",
+        "-d": "duckduckgo"
+    },
+    "browserSearch": {
+        "google": "https://www.google.com/search?q=",
+        "duckduckgo": "https://html.duckduckgo.com/html?q="
+    },
     "spaceBetweenResults": true,
     "clear": true,
     "removeYoutubeResults": true,
@@ -29,6 +38,7 @@ Finally, launch the script.
 
 * History system
 * Tab system
+* Google and DuckDuckGo support
 * Customizable
 * And more...
 
@@ -36,7 +46,8 @@ Finally, launch the script.
 
 | Commands                    | Action                                                                         |
 |-----------------------------|--------------------------------------------------------------------------------|
-| **:s** \<query>  <br> **:search** \<query> | Search the query on Google (write the number of the result to see the website) |
+| **:s** \<query>  <br> **:search** \<query> | Search the query on the default browser (write the number of the result to see the website) |
+| **:s** -\<browserPrefix> \<query>  <br> **:search** -\<browserPrefix> \<query> | Search the query on a specific browser (write the number of the result to see the website) |
 | **:ws** \<url> <br> **:website** \<url>    | Display a website                                                              |
 | **:h** <br> **:history**                 | See the history                                                                |
 | **:t** <br> **:tab** <br> **:tabs**               | See the list of tabs                                                           |

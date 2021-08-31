@@ -24,6 +24,10 @@ class SimpleWeb:
         with open("config.json", "r", encoding="utf-8") as configFile:
             config = json.load(configFile)
 
+        self.defaultBrowser = config["defaultBrowser"]
+        self.browserPrefixes = config["browserPrefixes"]
+        self.browserSearch = config["browserSearch"]
+
         self.resultPreviewLimit= config["resultPreviewLimit"]
         self.resultLimit= config["resultLimit"]
         self.spaceBetweenResults= config["spaceBetweenResults"]
@@ -56,7 +60,7 @@ class SimpleWeb:
         except requests.exceptions.RequestException as e:
             print(e)
 
-    def scrapeGoogle(self, back=False, query=None):
+    def scrapeGoogle(self, back=False, query=None, browser=None):
         # if back:
         #     newBack = self.current.copy()
         #     self.current = self.back.copy()
@@ -73,23 +77,38 @@ class SimpleWeb:
 
         if back is False:
             query = urllib.parse.quote_plus(query)
-            response = self.getSource("https://www.google.com/search?q=" + query)
+
+            # Browser
+            if browser is None:
+                browser = self.defaultBrowser
+
+            response = self.getSource(self.browserSearch[browser] + query)
 
             links = list(response.html.absolute_links)
-            googleDomains = ('https://www.google.', 
-                            'https://google.', 
-                            'https://webcache.googleusercontent.', 
-                            'http://webcache.googleusercontent.', 
-                            'https://policies.google.',
-                            'https://support.google.',
-                            'https://maps.google.')
+            browserDomains = {
+                "google": (
+                    "https://www.google.", 
+                    "https://google.", 
+                    "https://webcache.googleusercontent.", 
+                    "http://webcache.googleusercontent.", 
+                    "https://policies.google.",
+                    "https://support.google.",
+                    "https://maps.google."
+                ),
+                "duckduckgo": (
+                    "https://duckduckgo.com/feedback.html",
+                    "https://help.duckduckgo.com/duckduckgo-help-pages/company/ads-by-microsoft-on-duckduckgo-private-search",
+                    "https://duckduckgo.com/y.js?ad_provider="
+                    "https://html.duckduckgo.com/html/"
+                )
+            }
             
             youtubeDomains = ("https://www.youtube.com/")
 
             googleTransltaorDomains = ("https://translate.google.com/")
 
             for url in links[:]:
-                if url.startswith(googleDomains):
+                if url.startswith(browserDomains[browser]):
                     links.remove(url)
                 if self.removeYoutubeResults:
                     if url.startswith(youtubeDomains):
@@ -202,11 +221,19 @@ class SimpleWeb:
             if prefix == ":s"  or prefix == ":search":
                 if len(query.split(" ")) <= 1:
                     self.console.print("[i red]Empty query[/i red]")
-                self.scrapeGoogle(query=query.replace(prefix, "", 1))
+                else:
+                    browser = query.split(" ")[1]
+
+                    if browser in self.browserPrefixes:
+                        browser = self.browserPrefixes[browser]
+                    else:
+                        browser = None
+                    self.scrapeGoogle(query=query.replace(prefix, "", 1), browser=browser)
             elif prefix == ":ws" or prefix == ":website":
                 if len(query.split(" ")) <= 1:
                     self.console.print("[i red]Empty query[/i red]")
-                self.displayWebPage(link=query.replace(prefix, "", 1))
+                else:
+                    self.displayWebPage(link=query.replace(prefix, "", 1))
             # Clear
             elif prefix == ":c" or prefix == ":clear":
                 clear(command=True)

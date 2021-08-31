@@ -1,4 +1,5 @@
 import urllib
+# from urllib.request import urlopen, Request
 import requests
 import json
 from requests_html import HTMLSession
@@ -9,10 +10,9 @@ from rich.progress import track
 from rich.markdown import Markdown
 from rich.console import Console
 from rich.panel import Panel
+from rich.table import Table
 from rich.prompt import Prompt
 from markdownify import markdownify as md
-
-from urllib.request import urlopen, Request
 
 from History import History
 from Tabs import Tabs
@@ -213,6 +213,49 @@ class SimpleWeb:
             
         self.console.print(Panel(data))
 
+    def displayHelp(self):
+        clear()
+
+        self.console.rule("[bold yellow]HELP")
+
+        table = Table(show_header=True, header_style="bold red", show_lines=True)
+        table.add_column("Commands")
+        table.add_column("Actions")
+        table.add_row(
+            "[bold]:s <query>\n:search <query>",
+            "Search the query on the default browser (write the number of the result to see the website)"
+        )
+        table.add_row(
+            "[bold]:s -<browserPrefix> <query>\n:search -<browserPrefix> <query>",
+            "Search the query on a specific browser (write the number of the result to see the website)"
+        )
+        table.add_row(
+            "[bold]:ws <url>\n:website <url>",
+            "Display a website"
+        )
+        table.add_row(
+            "[bold]:h\n:history",
+            "Display the history"
+        )
+        table.add_row(
+            "[bold]:t\n:tab\n:tabs",
+            "Display the list of tabs"
+        )
+        table.add_row(
+            "[bold]:tab -s <tabNumber>",
+            "Select a specific tab"
+        )
+        table.add_row(
+            "[bold]:c\n:clear",
+            "Clear"
+        )
+        table.add_row(
+            "[bold]:config\n:settings",
+            "Display the settings"
+        )
+
+        self.console.print(table)
+
     def inputHandler(self):
         try:
             query = Prompt.ask("[bold blue]Search[/bold blue]").strip()
@@ -238,8 +281,10 @@ class SimpleWeb:
             elif prefix == ":c" or prefix == ":clear":
                 clear(command=True)
             # Settings
-            elif prefix == ":config":
+            elif prefix == ":config" or prefix == ":settings":
                 self.displaySettings()
+            elif prefix == ":help":
+                self.displayHelp()
             # Tabs
             elif prefix == ":t" or prefix == ":tab" or prefix == ":tabs":
                 if query == prefix:

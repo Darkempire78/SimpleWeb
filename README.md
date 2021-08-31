@@ -27,40 +27,7 @@ Browse the internet easily from the console.
         "startpage": "https://www.startpage.com/do/search?q="
     },
     "browserDomainsBackList":{
-        "google": [
-            "https://www.google.", 
-            "https://google.", 
-            "https://webcache.googleusercontent.", 
-            "http://webcache.googleusercontent.", 
-            "https://policies.google.",
-            "https://support.google.",
-            "https://maps.google."
-        ],
-        "duckduckgo": [
-            "https://duckduckgo.com/feedback.html",
-            "https://help.duckduckgo.com/duckduckgo-help-pages/company/ads-by-microsoft-on-duckduckgo-private-search",
-            "https://duckduckgo.com/y.js?ad_provider=",
-            "https://html.duckduckgo.com/html/"
-        ],
-        "brave": [
-            "https://search.brave.com",
-            "https://brave.com/terms-of-use/",
-            "https://brave.com/download/",
-            "https://brave.com/transparency/",
-            "https://status.brave.com/"
-        ],
-        "startpage": [
-            "https://www.startpage.com/privacy-please",
-            "https://www.startpage.com/en/about-us",
-            "https://eu-browse.startpage.com/av/proxy",
-            "https://add.startpage.com",
-            "https://www.startpage.com/en/search/privacy-policy.html",
-            "https://support.startpage.com/index.php",
-            "https://www.startpage.com/en/privacy-policy",
-            "https://www.startpage.com/?sc",
-            "https://www.startpage.com/do/settings",
-            "https://www.startmail.com/en/"
-        ]
+        ...
     },
     "spaceBetweenResults": true,
     "clear": true,
@@ -94,7 +61,7 @@ Finally, launch the script.
 | **:t** -s \<tabNumber>           | Select a specific tab                                                          |
 | **:t** \<query>                  | Create a new tab and search the query on Google                                |
 | **:c** <br> **:clear**                   | Clear                                                                          |
-| **:config**                     | Display the settings                                                           |
+| **:config** <br> **:settings**                   | Display the settings                                                           |
 
 ## Preview
 

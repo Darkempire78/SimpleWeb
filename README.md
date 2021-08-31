@@ -78,7 +78,7 @@ Finally, launch the script.
 
 * History system
 * Tab system
-* Google, DuckDuckGo and BraveSearch support
+* Google, DuckDuckGo, BraveSearch and StartPage support
 * Customizable
 * And more...
 

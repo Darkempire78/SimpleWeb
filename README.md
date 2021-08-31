@@ -13,16 +13,18 @@ Browse the internet easily from the console.
 {
     "resultPreviewLimit": 5, // 0 = Fast, 5 = Recommended, 10+= Slow
     "resultLimit": 20,
-    "defaultBrowser": "google", // available: google, duckduckgo and brave
+    "defaultBrowser": "google", // available: google, duckduckgo, brave and startpage
     "browserPrefixes": {
         "-g": "google",
         "-d": "duckduckgo",
-        "-b": "brave"
+        "-b": "brave",
+        "-s": "startpage"
     },
     "browserSearch": {
         "google": "https://www.google.com/search?q=",
         "duckduckgo": "https://html.duckduckgo.com/html?q=",
-        "brave": "https://search.brave.com/search?q="
+        "brave": "https://search.brave.com/search?q=",
+        "startpage": "https://www.startpage.com/do/search?q="
     },
     "browserDomainsBackList":{
         "google": [
@@ -46,6 +48,18 @@ Browse the internet easily from the console.
             "https://brave.com/download/",
             "https://brave.com/transparency/",
             "https://status.brave.com/"
+        ],
+        "startpage": [
+            "https://www.startpage.com/privacy-please",
+            "https://www.startpage.com/en/about-us",
+            "https://eu-browse.startpage.com/av/proxy",
+            "https://add.startpage.com",
+            "https://www.startpage.com/en/search/privacy-policy.html",
+            "https://support.startpage.com/index.php",
+            "https://www.startpage.com/en/privacy-policy",
+            "https://www.startpage.com/?sc",
+            "https://www.startpage.com/do/settings",
+            "https://www.startmail.com/en/"
         ]
     },
     "spaceBetweenResults": true,

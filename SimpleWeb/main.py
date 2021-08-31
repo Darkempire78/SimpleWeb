@@ -12,6 +12,8 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 from markdownify import markdownify as md
 
+from urllib.request import urlopen, Request
+
 from History import History
 from Tabs import Tabs
 from utils import clear
@@ -60,6 +62,13 @@ class SimpleWeb:
             session = HTMLSession()
             response = session.get(url)
             return response
+
+            # custom_user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
+            # req = Request(url, headers={"User-Agent": custom_user_agent})
+            # response = urlopen(req)
+            # return response
+
+
         except requests.exceptions.RequestException as e:
             print(e)
 
@@ -79,7 +88,7 @@ class SimpleWeb:
         tree = Tree(f"[bold blue]{query}[/bold blue]")
 
         if back is False:
-            query = urllib.parse.quote_plus(query)
+            query = urllib.parse.quote_plus(query.strip())
 
             # Browser
             if browser is None:
@@ -87,6 +96,8 @@ class SimpleWeb:
 
             response = self.getSource(self.browserSearch[browser] + query)
 
+            # soup = BeautifulSoup(response.read(), features="lxml")
+            # links = [link["href"] for link in soup.findAll("a")]
             links = list(response.html.absolute_links)
             
             youtubeDomains = ("https://www.youtube.com/")
@@ -213,6 +224,7 @@ class SimpleWeb:
                     browser = query.split(" ")[1]
 
                     if browser in self.browserPrefixes:
+                        query = query.replace(browser, "", 1)
                         browser = self.browserPrefixes[browser]
                     else:
                         browser = None

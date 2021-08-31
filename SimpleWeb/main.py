@@ -27,6 +27,9 @@ class SimpleWeb:
         self.defaultBrowser = config["defaultBrowser"]
         self.browserPrefixes = config["browserPrefixes"]
         self.browserSearch = config["browserSearch"]
+        self.browserDomainsBackList = config["browserDomainsBackList"]
+        for key, value in self.browserDomainsBackList.items():
+            self.browserDomainsBackList[key] = tuple(value)
 
         self.resultPreviewLimit= config["resultPreviewLimit"]
         self.resultLimit= config["resultLimit"]
@@ -85,30 +88,13 @@ class SimpleWeb:
             response = self.getSource(self.browserSearch[browser] + query)
 
             links = list(response.html.absolute_links)
-            browserDomains = {
-                "google": (
-                    "https://www.google.", 
-                    "https://google.", 
-                    "https://webcache.googleusercontent.", 
-                    "http://webcache.googleusercontent.", 
-                    "https://policies.google.",
-                    "https://support.google.",
-                    "https://maps.google."
-                ),
-                "duckduckgo": (
-                    "https://duckduckgo.com/feedback.html",
-                    "https://help.duckduckgo.com/duckduckgo-help-pages/company/ads-by-microsoft-on-duckduckgo-private-search",
-                    "https://duckduckgo.com/y.js?ad_provider="
-                    "https://html.duckduckgo.com/html/"
-                )
-            }
             
             youtubeDomains = ("https://www.youtube.com/")
 
             googleTransltaorDomains = ("https://translate.google.com/")
 
             for url in links[:]:
-                if url.startswith(browserDomains[browser]):
+                if url.startswith(self.browserDomainsBackList[browser]):
                     links.remove(url)
                 if self.removeYoutubeResults:
                     if url.startswith(youtubeDomains):
@@ -131,6 +117,7 @@ class SimpleWeb:
             # else:
             if n <= self.resultPreviewLimit:
                 clear()
+                print(Panel(f"[bold yellow]{browser.upper()}"))
                 print(tree)
             title = None 
             description = None 
@@ -162,6 +149,7 @@ class SimpleWeb:
             tree.add(f"[b][{n}][/b] [i red]{link}[/i red]" + ('\n[bold]'+ title + '[/bold]' if title else '') + ('\n' + description if description else '') + ('\n' if self.spaceBetweenResults is True else ''))
             
         clear()
+        print(Panel(f"[bold yellow]{browser.upper()}"))
         print(tree)
 
     def htmlToMarkdown(self, url):

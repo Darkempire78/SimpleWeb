@@ -13,14 +13,40 @@ Browse the internet easily from the console.
 {
     "resultPreviewLimit": 5, // 0 = Fast, 5 = Recommended, 10+= Slow
     "resultLimit": 20,
-    "defaultBrowser": "google", // available: google, duckduckgo
+    "defaultBrowser": "google", // available: google, duckduckgo and brave
     "browserPrefixes": {
         "-g": "google",
-        "-d": "duckduckgo"
+        "-d": "duckduckgo",
+        "-b": "brave"
     },
     "browserSearch": {
         "google": "https://www.google.com/search?q=",
-        "duckduckgo": "https://html.duckduckgo.com/html?q="
+        "duckduckgo": "https://html.duckduckgo.com/html?q=",
+        "brave": "https://search.brave.com/search?q="
+    },
+    "browserDomainsBackList":{
+        "google": [
+            "https://www.google.", 
+            "https://google.", 
+            "https://webcache.googleusercontent.", 
+            "http://webcache.googleusercontent.", 
+            "https://policies.google.",
+            "https://support.google.",
+            "https://maps.google."
+        ],
+        "duckduckgo": [
+            "https://duckduckgo.com/feedback.html",
+            "https://help.duckduckgo.com/duckduckgo-help-pages/company/ads-by-microsoft-on-duckduckgo-private-search",
+            "https://duckduckgo.com/y.js?ad_provider=",
+            "https://html.duckduckgo.com/html/"
+        ],
+        "brave": [
+            "https://search.brave.com",
+            "https://brave.com/terms-of-use/",
+            "https://brave.com/download/",
+            "https://brave.com/transparency/",
+            "https://status.brave.com/"
+        ]
     },
     "spaceBetweenResults": true,
     "clear": true,
@@ -38,7 +64,7 @@ Finally, launch the script.
 
 * History system
 * Tab system
-* Google and DuckDuckGo support
+* Google, DuckDuckGo and BraveSearch support
 * Customizable
 * And more...
 

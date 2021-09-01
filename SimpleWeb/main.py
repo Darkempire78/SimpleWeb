@@ -26,6 +26,9 @@ class SimpleWeb:
         with open("config.json", "r", encoding="utf-8") as configFile:
             config = json.load(configFile)
 
+        self.prefix = config["prefix"]
+        self.subPrefix = config["subPrefix"]
+
         self.defaultBrowser = config["defaultBrowser"]
         self.browserPrefixes = config["browserPrefixes"]
         self.browserSearch = config["browserSearch"]
@@ -222,35 +225,35 @@ class SimpleWeb:
         table.add_column("Commands")
         table.add_column("Actions")
         table.add_row(
-            "[bold]:s <query>\n:search <query>",
+            f"[bold]{self.prefix}s <query>\n{self.prefix}search <query>",
             "Search the query on the default browser (write the number of the result to see the website)"
         )
         table.add_row(
-            "[bold]:s -<browserPrefix> <query>\n:search -<browserPrefix> <query>",
+            f"[bold]{self.prefix}s {self.subPrefix}<browserPrefix> <query>\n{self.prefix}search {self.subPrefix}<browserPrefix> <query>",
             "Search the query on a specific browser (write the number of the result to see the website)"
         )
         table.add_row(
-            "[bold]:ws <url>\n:website <url>",
+            f"[bold]{self.prefix}ws <url>\n{self.prefix}website <url>",
             "Display a website"
         )
         table.add_row(
-            "[bold]:h\n:history",
+            f"[bold]{self.prefix}h\n{self.prefix}history",
             "Display the history"
         )
         table.add_row(
-            "[bold]:t\n:tab\n:tabs",
+            f"[bold]{self.prefix}t\n{self.prefix}tab\n{self.prefix}tabs",
             "Display the list of tabs"
         )
         table.add_row(
-            "[bold]:tab -s <tabNumber>",
+            f"[bold]{self.prefix}tab {self.subPrefix}s <tabNumber>",
             "Select a specific tab"
         )
         table.add_row(
-            "[bold]:c\n:clear",
+            f"[bold]{self.prefix}c\n{self.prefix}clear",
             "Clear"
         )
         table.add_row(
-            "[bold]:config\n:settings",
+            f"[bold]{self.prefix}config\n{self.prefix}settings",
             "Display the settings"
         )
 
@@ -260,7 +263,7 @@ class SimpleWeb:
         try:
             query = Prompt.ask("[bold blue]Search[/bold blue]").strip()
             prefix = query.split(" ")[0]
-            if prefix == ":s"  or prefix == ":search":
+            if prefix == f"{self.prefix}s"  or prefix == f"{self.prefix}search":
                 if len(query.split(" ")) <= 1:
                     self.console.print("[i red]Empty query[/i red]")
                 else:
@@ -272,30 +275,30 @@ class SimpleWeb:
                     else:
                         browser = None
                     self.scrapeGoogle(query=query.replace(prefix, "", 1), browser=browser)
-            elif prefix == ":ws" or prefix == ":website":
+            elif prefix == f"{self.prefix}ws" or prefix == f"{self.prefix}website":
                 if len(query.split(" ")) <= 1:
                     self.console.print("[i red]Empty query[/i red]")
                 else:
                     self.displayWebPage(link=query.replace(prefix, "", 1))
             # Clear
-            elif prefix == ":c" or prefix == ":clear":
+            elif prefix == f"{self.prefix}c" or prefix == f"{self.prefix}clear":
                 clear(command=True)
             # Settings
-            elif prefix == ":config" or prefix == ":settings":
+            elif prefix == f"{self.prefix}config" or prefix == f"{self.prefix}settings":
                 self.displaySettings()
-            elif prefix == ":help":
+            elif prefix == f"{self.prefix}help":
                 self.displayHelp()
             # Tabs
-            elif prefix == ":t" or prefix == ":tab" or prefix == ":tabs":
+            elif prefix == f"{self.prefix}t" or prefix == f"{self.prefix}tab" or prefix == f"{self.prefix}tabs":
                 if query == prefix:
                     self.Tabs.display()
-                elif query.split(" ")[1] == "-s" or query.split(" ")[1] == "-select":
+                elif query.split(" ")[1] == f"{self.subPrefix}s" or query.split(" ")[1] == f"{self.subPrefix}select":
                     self.Tabs.changeCurrent(query.split(" ")[2])
                 else:
                     self.Tabs.new(query=query.replace(prefix, "", 1))
                     self.scrapeGoogle(query=query) # Search the query
             # History
-            elif prefix == ":h" or prefix == ":history":
+            elif prefix == f"{self.prefix}h" or prefix == f"{self.prefix}history":
                 self.History.displayHistory()
             # Back
             # elif prefix == ":b":
@@ -310,7 +313,7 @@ class SimpleWeb:
                     link = self.Tabs.tabs[self.Tabs.currentTab]["current"]["data"]["results"][int(query) - 1]["link"]
                     self.displayWebPage(link=link)
                 else:
-                    self.console.print("[i red]Invalid query! Use :s <query> to search on internet or :help to get the help panel[/i red]")
+                    self.console.print(f"[i red]Invalid query! Use {self.prefix}s <query> to search on internet or {self.prefix}help to get the help panel[/i red]")
             self.inputHandler()
         except Exception as ex:
             print(ex)

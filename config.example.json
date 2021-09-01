@@ -1,4 +1,7 @@
 {
+    "prefix": ":",
+    "subPrefix": "-",
+    
     "resultPreviewLimit": 5,
     "resultLimit": 20,
 
@@ -15,7 +18,7 @@
         "brave": "https://search.brave.com/search?q=",
         "startpage": "https://www.startpage.com/do/search?q="
     },
-    "browserDomainsBackList":{
+    "browserDomainsBackList": {
         "google": [
             "https://www.google.", 
             "https://google.", 

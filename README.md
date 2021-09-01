@@ -11,6 +11,8 @@ Browse the internet easily from the console.
 
 ```Javascript
 {
+    "prefix": ":",
+    "subPrefix": "-",
     "resultPreviewLimit": 5, // 0 = Fast, 5 = Recommended, 10+= Slow
     "resultLimit": 20,
     "defaultBrowser": "google", // available: google, duckduckgo, brave and startpage
@@ -26,9 +28,7 @@ Browse the internet easily from the console.
         "brave": "https://search.brave.com/search?q=",
         "startpage": "https://www.startpage.com/do/search?q="
     },
-    "browserDomainsBackList":{
-        ...
-    },
+    "browserDomainsBackList": { ... },
     "spaceBetweenResults": true,
     "clear": true,
     "removeYoutubeResults": true,
